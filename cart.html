@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+
+    <title>App</title>
+</head>
+
+<body>
+    <div class="container-bg">
+        <div class="container">
+
+            <div class="user">
+                <div class="heading">
+                    <h1 style="text-align: center;">Shopping Cart</h1>
+                    <hr style=" margin-top:15px;">
+                </div>
+                <div class="headingg">
+                    <div> Items</div>
+                    <div>Title</div>
+                    <div>Price</div>
+                    <div>Quantity</div>
+                </div>
+                <div id="products"></div>
+
+            </div>
+
+        </div>
+    </div>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.4/firebase-app.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAG3LuX8cFuIER9rVbIuoJsixvM8_XLdJs",
+            authDomain: "shopping-521aa.firebaseapp.com",
+            projectId: "shopping-521aa",
+            storageBucket: "shopping-521aa.appspot.com",
+            messagingSenderId: "62941135732",
+            appId: "1:62941135732:web:7c7e70ac10069e8358e221"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        import { getDatabase, set, ref, get, child, update, remove } from "https://www.gstatic.com/firebasejs/9.8.4/firebase-database.js";
+        const db = getDatabase();
+
+
+        // Fetching data from data base        
+        var snaps = document.getElementById("products");
+
+        // var data = [];
+        const dref = ref(db);
+        get(child(dref, "shoppingCartdata")).then((snapshot) => {
+
+            snapshot.forEach(element => {
+                console.log(element.val().url);
+                const box = document.createElement("div");
+                box.className = "box1";
+
+
+                const pic = document.createElement("div");
+                pic.style.backgroundImage = 'url(' + element.val().url + ')';
+                pic.style.width = '70px';
+                pic.style.height = '100px';
+                pic.className = "img";
+                pic.style.backgroundSize = "cover";
+                pic.style.marginLeft = "20px";
+
+                const ttle = document.createElement("div");
+                ttle.innerHTML = element.val().shortTitle;
+                ttle.style.marginTop = "42px";
+
+                const price = document.createElement("div");
+                price.style.marginTop = "30px";
+                const mrp = document.createElement("div");
+                mrp.innerHTML = "&#8377" + ' ' + element.val().cost;
+                mrp.style.marginLeft = '5px';
+                mrp.style.color = "red";
+
+                const old_mrp = document.createElement("div");
+                old_mrp.innerHTML = "&#8377" + ' ' + element.val().mrp + '  ';
+                old_mrp.style.textDecoration = "line-through";
+                old_mrp.style.fontSize = "11.5px"
+                old_mrp.style.marginLeft = '5px';
+
+                const dis = document.createElement("div");
+                dis.innerHTML = element.val().discount;
+                dis.style.marginLeft = '5px';
+                dis.style.fontSize = "13.5px";
+
+
+                price.appendChild(mrp);
+                price.appendChild(old_mrp);
+                price.appendChild(dis);
+
+                const whole = document.createElement("div");
+                whole.style.display = "flex";
+                whole.style.marginRight = "50px"
+                const btn1 = document.createElement("button");
+                btn1.innerHTML = "+";
+                btn1.style.height = "20px"
+                btn1.style.marginTop = "40px"
+                const btn2 = document.createElement("button");
+                btn2.innerHTML = "-";
+                btn2.style.height = "20px"
+                btn2.style.marginTop = "40px"
+                const qty = document.createElement("div");
+                qty.innerHTML = element.val().quantity;
+                qty.style.marginTop = "40px"
+
+                whole.appendChild(btn1);
+                whole.appendChild(qty);
+                whole.appendChild(btn2);
+
+
+
+
+
+
+                box.appendChild(pic);
+                box.appendChild(ttle);
+                box.appendChild(price);
+                box.appendChild(whole);
+                snaps.appendChild(box);
+
+
+            });
+        })
+
+
+
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="nav">
+        <h3>Shopmart</h3>
+        <div class="cart">
+            <div class="num">0</div>
+            <div class="cartt" onclick="location.href='cart.html'">&#128722;</div>
+        </div>
+    </div>
+
+    <div id="isme">
+
+    </div>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.4/firebase-app.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAG3LuX8cFuIER9rVbIuoJsixvM8_XLdJs",
+            authDomain: "shopping-521aa.firebaseapp.com",
+            projectId: "shopping-521aa",
+            storageBucket: "shopping-521aa.appspot.com",
+            messagingSenderId: "62941135732",
+            appId: "1:62941135732:web:7c7e70ac10069e8358e221"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        import { getDatabase, set, ref, get, child, update, remove } from "https://www.gstatic.com/firebasejs/9.8.4/firebase-database.js";
+        const db = getDatabase();
+
+
+        // Fetching data from data base        
+        var snaps = document.getElementById("isme")
+        // console.log(snaps)
+        var htmlCode = "";
+        // var data = [];
+        const dref = ref(db);
+
+        get(child(dref, "shoppingdata")).then((snapshot) => {
+
+            snapshot.forEach(element => {
+                const cardout = document.createElement("div");
+                cardout.className = "card-out-out";
+
+
+                const card = document.createElement("div");
+                card.className = "card-out";
+
+
+
+                const picture = document.createElement("div");
+                picture.style.backgroundImage = 'url(' + element.val().url + ')';
+                picture.style.width = '210px';
+                picture.style.height = '250px';
+                picture.className = "image";
+                picture.style.backgroundSize = "cover";
+
+                const stitle = document.createElement("div");
+                stitle.innerHTML = element.val().shortTitle;
+                stitle.style.marginTop = '5px';
+                stitle.style.textAlign = 'center';
+                stitle.className = "title";
+
+                const rupee = document.createElement("div")
+                const mrp = document.createElement("span");
+                mrp.innerHTML = "&#8377" + ' ' + element.val().cost;
+                mrp.style.marginLeft = '5px';
+                mrp.style.color = "red";
+                mrp.className = "mrp";
+
+                const old_mrp = document.createElement("span");
+                old_mrp.innerHTML = "&#8377" + ' ' + element.val().mrp + '  ';
+                old_mrp.style.textDecoration = "line-through";
+                old_mrp.style.fontSize = "11.5px"
+                old_mrp.style.marginLeft = '5px';
+
+                const dis = document.createElement("span");
+                dis.innerHTML = element.val().discount;
+                dis.style.marginLeft = '5px';
+                dis.style.fontSize = "13.5px";
+
+
+                rupee.appendChild(mrp);
+                rupee.appendChild(old_mrp);
+                rupee.appendChild(dis);
+                rupee.style.textAlign = 'center';
+
+                const tagl = document.createElement("div");
+                tagl.innerHTML = element.val().tagline;
+                tagl.style.textAlign = 'center';
+
+                const but = document.createElement("button");
+                but.innerHTML = "Add to cart";
+                but.style.textAlign = 'center';
+                but.style.marginLeft = "70px";
+                but.className = "intoCart";
+                but.style.marginTop = "3px";
+
+                but.id = element.val().id;
+                console.log()
+                but.onclick = addCart;
+
+
+                // console.log(picture);
+                card.appendChild(picture);
+                card.appendChild(stitle);
+                card.appendChild(rupee);
+                card.appendChild(tagl);
+                card.appendChild(but);
+                cardout.appendChild(card);
+                snaps.appendChild(cardout);
+            });
+        })
+        //storing cart data
+
+
+        function addCart(obj) {
+            console.log("Here");
+            const card = document.getElementsByClassName("card-out");
+            console.log(this.id);
+            const ids = this.id;
+            var imgurl = "";
+            var price = "";
+            var title = "";
+
+            get(child(dref, "shoppingdata/" + ids)).then((snapshot) => {
+
+                if (snapshot.exists()) {
+                    console.log(snapshot.val())
+                    set(ref(db, "shoppingCartdata/" + ids), {
+                        id: snapshot.val().id,
+                        url: snapshot.val().url,
+                        title: snapshot.val().title,
+                        shortTitle: snapshot.val().shortTitle,
+                        mrp: snapshot.val().mrp,
+                        cost: snapshot.val().cost,
+                        discount: snapshot.val().discount,
+                        quantity: snapshot.val().quantity,
+                        description: snapshot.val().description,
+                        tagline: snapshot.val().tagline
+
+                    })
+
+                } else {
+                    alert("Data not found");
+                }
+            })
+            // .catch((error) => {
+            //     alert("unsuccessful");
+            // });
+
+
+
+        }
+
+
+    </script>
+</body>
+
+</html>
