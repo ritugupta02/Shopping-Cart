@@ -16,7 +16,13 @@
 
             <div class="user">
                 <div class="heading">
-                    <h1 style="text-align: center;">Shopping Cart</h1>
+                    <div style="display:flex; margin-right: 20px;margin-top: 15px;height: 30px; margin-left: 10px;">
+                        <h1 style="text-align: center;">Shopping Cart</h1>
+                        <div class="tstart"> Total amount: &#8377<span id="total"></span>
+                        </div>
+                        <button id="pay">Place order</button>
+                    </div>
+
                     <hr style=" margin-top:15px;">
                 </div>
                 <div class="headingg">
@@ -61,10 +67,11 @@
         var snaps = document.getElementById("products");
         const removeall = document.getElementById("removeall")
 
+
         const dref = ref(db);
         function cartdata() {
             get(child(dref, "shoppingCartdata")).then((snapshot) => {
-
+                var t = 0;
                 snapshot.forEach(element => {
                     console.log(element.val().url);
                     const box = document.createElement("div");
@@ -89,6 +96,9 @@
                     mrp.innerHTML = "&#8377" + ' ' + element.val().cost;
                     mrp.style.marginLeft = '5px';
                     mrp.style.color = "red";
+                    t = t + element.val().cost;
+
+
 
                     const old_mrp = document.createElement("div");
                     old_mrp.innerHTML = "&#8377" + ' ' + element.val().mrp + '  ';
@@ -133,12 +143,6 @@
                     whole.appendChild(btn1);
                     whole.appendChild(qty);
                     whole.appendChild(btn2);
-
-
-
-
-
-
                     box.appendChild(pic);
                     box.appendChild(ttle);
                     box.appendChild(price);
@@ -148,7 +152,12 @@
 
 
                 });
+                var total = document.getElementById("total");
+                total.innerHTML = t;
+                console.log(total.innerHTML)
             })
+
+
 
 
         }
