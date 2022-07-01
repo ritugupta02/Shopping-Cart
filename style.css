@@ -34,7 +34,7 @@ h3 {
 
 }
 
-.num {
+#num {
     background-color: rgb(85, 86, 86);
     width: 30px;
     height: 30px;
@@ -112,24 +112,24 @@ h3 {
     box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
 }
 
-.products {
-    background-color: inherit;
-    width: 800px;
+
+#productss {
+    width: 830px;
     height: 450px;
-    border-radius: 10px;
+    background-color: inherit;
     overflow-y: scroll;
-    position: absolute;
-    z-index: 0;
-    overflow: hidden;
 }
+
+#productss::-webkit-scrollbar {
+    display: none;
+    overflow-y: scroll;
+}
+
 
 .box1 {
     width: 800px;
     height: 100px;
     box-shadow: 1px 2px 9px rgb(170, 170, 170);
-    /* position: absolute; */
-    /* z-index: 1; */
-    /* margin-left: 20px; */
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
@@ -140,5 +140,5 @@ h3 {
     display: flex;
     justify-content: space-between;
     margin-left: 30px;
-    margin-right: 70px;
+    margin-right: 40px;
 }

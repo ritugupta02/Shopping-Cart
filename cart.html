@@ -24,8 +24,12 @@
                     <div>Title</div>
                     <div>Price</div>
                     <div>Quantity</div>
+                    <div id="removeall">Remove All</div>
                 </div>
-                <div id="products"></div>
+                <div id="productss">
+                    <div id="products"></div>
+                </div>
+
 
             </div>
 
@@ -55,85 +59,122 @@
 
         // Fetching data from data base        
         var snaps = document.getElementById("products");
+        const removeall = document.getElementById("removeall")
 
-        // var data = [];
         const dref = ref(db);
-        get(child(dref, "shoppingCartdata")).then((snapshot) => {
+        function cartdata() {
+            get(child(dref, "shoppingCartdata")).then((snapshot) => {
 
-            snapshot.forEach(element => {
-                console.log(element.val().url);
-                const box = document.createElement("div");
-                box.className = "box1";
-
-
-                const pic = document.createElement("div");
-                pic.style.backgroundImage = 'url(' + element.val().url + ')';
-                pic.style.width = '70px';
-                pic.style.height = '100px';
-                pic.className = "img";
-                pic.style.backgroundSize = "cover";
-                pic.style.marginLeft = "20px";
-
-                const ttle = document.createElement("div");
-                ttle.innerHTML = element.val().shortTitle;
-                ttle.style.marginTop = "42px";
-
-                const price = document.createElement("div");
-                price.style.marginTop = "30px";
-                const mrp = document.createElement("div");
-                mrp.innerHTML = "&#8377" + ' ' + element.val().cost;
-                mrp.style.marginLeft = '5px';
-                mrp.style.color = "red";
-
-                const old_mrp = document.createElement("div");
-                old_mrp.innerHTML = "&#8377" + ' ' + element.val().mrp + '  ';
-                old_mrp.style.textDecoration = "line-through";
-                old_mrp.style.fontSize = "11.5px"
-                old_mrp.style.marginLeft = '5px';
-
-                const dis = document.createElement("div");
-                dis.innerHTML = element.val().discount;
-                dis.style.marginLeft = '5px';
-                dis.style.fontSize = "13.5px";
+                snapshot.forEach(element => {
+                    console.log(element.val().url);
+                    const box = document.createElement("div");
+                    box.className = "box1";
 
 
-                price.appendChild(mrp);
-                price.appendChild(old_mrp);
-                price.appendChild(dis);
+                    const pic = document.createElement("div");
+                    pic.style.backgroundImage = 'url(' + element.val().url + ')';
+                    pic.style.width = '70px';
+                    pic.style.height = '100px';
+                    pic.className = "img";
+                    pic.style.backgroundSize = "cover";
+                    pic.style.marginLeft = "20px";
 
-                const whole = document.createElement("div");
-                whole.style.display = "flex";
-                whole.style.marginRight = "50px"
-                const btn1 = document.createElement("button");
-                btn1.innerHTML = "+";
-                btn1.style.height = "20px"
-                btn1.style.marginTop = "40px"
-                const btn2 = document.createElement("button");
-                btn2.innerHTML = "-";
-                btn2.style.height = "20px"
-                btn2.style.marginTop = "40px"
-                const qty = document.createElement("div");
-                qty.innerHTML = element.val().quantity;
-                qty.style.marginTop = "40px"
+                    const ttle = document.createElement("div");
+                    ttle.innerHTML = element.val().shortTitle;
+                    ttle.style.marginTop = "42px";
 
-                whole.appendChild(btn1);
-                whole.appendChild(qty);
-                whole.appendChild(btn2);
+                    const price = document.createElement("div");
+                    price.style.marginTop = "30px";
+                    const mrp = document.createElement("div");
+                    mrp.innerHTML = "&#8377" + ' ' + element.val().cost;
+                    mrp.style.marginLeft = '5px';
+                    mrp.style.color = "red";
 
+                    const old_mrp = document.createElement("div");
+                    old_mrp.innerHTML = "&#8377" + ' ' + element.val().mrp + '  ';
+                    old_mrp.style.textDecoration = "line-through";
+                    old_mrp.style.fontSize = "11.5px"
+                    old_mrp.style.marginLeft = '5px';
 
-
-
-
-
-                box.appendChild(pic);
-                box.appendChild(ttle);
-                box.appendChild(price);
-                box.appendChild(whole);
-                snaps.appendChild(box);
+                    const dis = document.createElement("div");
+                    dis.innerHTML = element.val().discount;
+                    dis.style.marginLeft = '5px';
+                    dis.style.fontSize = "13.5px";
 
 
-            });
-        })
+                    price.appendChild(mrp);
+                    price.appendChild(old_mrp);
+                    price.appendChild(dis);
+
+                    const whole = document.createElement("div");
+                    whole.style.display = "flex";
+                    whole.style.marginRight = "50px"
+                    const btn1 = document.createElement("button");
+                    btn1.innerHTML = "+";
+                    btn1.style.height = "20px"
+                    btn1.style.marginTop = "40px"
+                    const btn2 = document.createElement("button");
+                    btn2.innerHTML = "-";
+                    btn2.style.height = "20px"
+                    btn2.style.marginTop = "40px"
+                    const qty = document.createElement("div");
+                    qty.innerHTML = element.val().quantity;
+                    qty.style.marginTop = "40px"
+
+                    const rmov = document.createElement("button");
+                    rmov.innerHTML = "Remove";
+                    rmov.id = element.val().id;
+                    rmov.onclick = removItem;
+                    rmov.style.height = "20px"
+                    rmov.style.marginTop = "40px";
+                    rmov.style.marginRight = "20px";
+
+
+                    whole.appendChild(btn1);
+                    whole.appendChild(qty);
+                    whole.appendChild(btn2);
+
+
+
+
+
+
+                    box.appendChild(pic);
+                    box.appendChild(ttle);
+                    box.appendChild(price);
+                    box.appendChild(whole);
+                    box.appendChild(rmov);
+                    snaps.appendChild(box);
+
+
+                });
+            })
+
+
+        }
+
+        cartdata();
+
+        function removItem() {
+            const id = this.id;
+            remove(ref(db, "shoppingCartdata/" + id)).then(() => {
+                console.log("Removed")
+            }).catch((error) => {
+                alert("Error" + error);
+            })
+
+            document.location.reload()
+
+        }
+
+        removeall.addEventListener('click', function () {
+            remove(ref(db, "shoppingCartdata")).then(() => {
+                console.log("Removed")
+            }).catch((error) => {
+                alert("Error" + error);
+            })
+            document.location.reload()
+        });
 
 
 

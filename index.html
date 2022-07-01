@@ -13,7 +13,7 @@
     <div class="nav">
         <h3>Shopmart</h3>
         <div class="cart">
-            <div class="num">0</div>
+            <div id="num">0</div>
             <div class="cartt" onclick="location.href='cart.html'">&#128722;</div>
         </div>
     </div>
@@ -44,9 +44,12 @@
 
 
         // Fetching data from data base        
-        var snaps = document.getElementById("isme")
+        var snaps = document.getElementById("isme");
+
+        // var count = 7;
+        // cartnum.innerHTML = count;
         // console.log(snaps)
-        var htmlCode = "";
+
         // var data = [];
         const dref = ref(db);
 
@@ -131,9 +134,7 @@
             const card = document.getElementsByClassName("card-out");
             console.log(this.id);
             const ids = this.id;
-            var imgurl = "";
-            var price = "";
-            var title = "";
+
 
             get(child(dref, "shoppingdata/" + ids)).then((snapshot) => {
 
@@ -153,18 +154,30 @@
 
                     })
 
+
                 } else {
                     alert("Data not found");
                 }
             })
-            // .catch((error) => {
-            //     alert("unsuccessful");
-            // });
-
-
-
+            funImp()
         }
 
+
+        function funImp() {
+
+            get(child(dref, "shoppingCartdata")).then((snapshot) => {
+                var count = 0;
+                snapshot.forEach(element => {
+                    count = count + 1;
+                });
+
+                var cartnum = document.getElementById("num");
+                cartnum.innerHTML = count;
+                console.log(cartnum.innerHTML);
+            })
+        }
+
+        funImp();
 
     </script>
 </body>
